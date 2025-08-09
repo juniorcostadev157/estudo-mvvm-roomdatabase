@@ -5,11 +5,16 @@ import androidx.navigation.NavController
 import com.junior.formularioroomdatabase.base.Constants
 import com.junior.formularioroomdatabase.base.Routes
 import com.junior.formularioroomdatabase.data.SharedPreferences
+import com.junior.formularioroomdatabase.data.TaskDataBase
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
-class EditTaskViewModel(private val localData: SharedPreferences, private val navController: NavController):
+class EditTaskViewModel(
+    private val localData: SharedPreferences,
+    private val navController: NavController,
+    private val localDB:TaskDataBase):
     ViewModel() {
+
     private var _title = MutableStateFlow(localData.getPreference(Constants.TITLE_KEY))
     val title: StateFlow<String> = _title
 

@@ -25,16 +25,17 @@ import com.junior.formularioroomdatabase.activity.viewmodel.CreateTaskViewModel
 import com.junior.formularioroomdatabase.activity.viewmodel.EditTaskViewModel
 import com.junior.formularioroomdatabase.activity.viewmodel.ListTaskViewModel
 import com.junior.formularioroomdatabase.data.SharedPreferences
+import com.junior.formularioroomdatabase.data.TaskDataBase
 
-class CallScaffold (private val navController: NavController){
+class CallScaffold (private val navController: NavController, private val localDB:TaskDataBase){
 
     @SuppressLint("ComposableNaming", "ViewModelConstructorInComposable")
     @Composable
     fun CreateScreen(screen:String): PaddingValues {
         val localData = SharedPreferences(LocalContext.current)
-        val listTaskViewModel = ListTaskViewModel(localData)
-        val createTaskViewModel = CreateTaskViewModel(localData, navController)
-        val editTaskViewModel = EditTaskViewModel(localData,  navController)
+        val listTaskViewModel = ListTaskViewModel(localData, localDB)
+        val createTaskViewModel = CreateTaskViewModel(localData, navController, localDB)
+        val editTaskViewModel = EditTaskViewModel(localData,  navController, localDB)
 
 
         Scaffold(topBar = {

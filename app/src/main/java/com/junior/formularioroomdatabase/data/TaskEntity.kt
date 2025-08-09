@@ -11,6 +11,6 @@ data class TaskEntity(
     @ColumnInfo("title")
     var title:String = "",
     @ColumnInfo("content")
-    var content:String = "",
+    var description:String = "",
 
 )
