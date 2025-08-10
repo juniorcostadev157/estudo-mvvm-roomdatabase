@@ -1,6 +1,7 @@
 package com.junior.formularioroomdatabase.activity
 
 import android.annotation.SuppressLint
+import android.content.ClipData.Item
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,6 +11,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -21,6 +23,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -40,7 +43,10 @@ fun ListTaskScreen(paddingValues: PaddingValues, navController: NavController, l
     val localData = SharedPreferences(LocalContext.current)
 
 
-    val title by listTaskViewModel.title.collectAsState(localData.getPreference(Constants.TITLE_KEY))
+    LaunchedEffect(key1 = Unit) {
+        listTaskViewModel.loadTask()
+    }
+    val task by listTaskViewModel.task.collectAsState()
     val showAlertDialog by listTaskViewModel.showAlertDialog.collectAsState(false)
 
 
@@ -59,38 +65,48 @@ fun ListTaskScreen(paddingValues: PaddingValues, navController: NavController, l
             }, text = { Text(text = "Deseja excluir a tarefa?") })
         }
 
-        if (title != ""){
-            Card(modifier = Modifier.fillMaxWidth().padding(10.dp).clickable {
-                listTaskViewModel.navigate(Routes.DetailsTask.route , navController)
+        if (task.isNotEmpty()){
 
-            }) {
+            LazyColumn {
+                task.forEach {task->
+                    item{
+                        Card(modifier = Modifier.fillMaxWidth().padding(10.dp).clickable {
+                            listTaskViewModel.navigate(Routes.DetailsTask.route , navController)
+
+                        }) {
 
 
-                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
 
-                    Text(text = localData.getPreference(Constants.TITLE_KEY), modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 10.dp))
-                    Box(modifier = Modifier){
-                        Row {
-                            IconButton(onClick =
-                            {
+                                Text(text = task.title, modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 10.dp))
+                                Box(modifier = Modifier){
+                                    Row {
+                                        IconButton(onClick =
+                                        {
 
-                                listTaskViewModel.setShowAlertDialog(true)
+                                            listTaskViewModel.setShowAlertDialog(true)
 
-                            }
-                            ) {
-                                Icon(Icons.Default.Delete, contentDescription = null)
-                            }
-                            IconButton(onClick = {
-                                listTaskViewModel.navigate(Routes.EditTask.route,  navController)
+                                        }
+                                        ) {
+                                            Icon(Icons.Default.Delete, contentDescription = null)
+                                        }
+                                        IconButton(onClick = {
+                                            listTaskViewModel.navigate(Routes.EditTask.route,  navController)
 
-                            }) {
-                                Icon(Icons.Default.Edit, contentDescription = null)
+                                        }) {
+                                            Icon(Icons.Default.Edit, contentDescription = null)
+                                        }
+                                    }
+
+                                }
                             }
                         }
-
                     }
+
                 }
             }
+
+
         }else{
             Box(modifier = Modifier.fillMaxSize()){
                 Text(text = "Não a tasks salvas")
