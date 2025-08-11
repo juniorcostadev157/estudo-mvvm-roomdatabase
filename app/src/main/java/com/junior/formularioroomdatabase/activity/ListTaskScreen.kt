@@ -1,7 +1,6 @@
 package com.junior.formularioroomdatabase.activity
 
 import android.annotation.SuppressLint
-import android.content.ClipData.Item
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -12,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
@@ -26,6 +26,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -35,19 +38,25 @@ import com.junior.formularioroomdatabase.activity.viewmodel.ListTaskViewModel
 import com.junior.formularioroomdatabase.base.Constants
 import com.junior.formularioroomdatabase.base.Routes
 import com.junior.formularioroomdatabase.data.SharedPreferences
+import com.junior.formularioroomdatabase.data.TaskEntity
 
 @SuppressLint("ViewModelConstructorInComposable")
 @Composable
-fun ListTaskScreen(paddingValues: PaddingValues, navController: NavController, listTaskViewModel: ListTaskViewModel) {
+fun ListTaskScreen(
+    paddingValues: PaddingValues,
+    navController: NavController,
+    listTaskViewModel: ListTaskViewModel) {
 
-    val localData = SharedPreferences(LocalContext.current)
 
 
-    LaunchedEffect(key1 = Unit) {
+
+    LaunchedEffect(key1 = listTaskViewModel.task) {
         listTaskViewModel.loadTask()
     }
+    val localDataShared = SharedPreferences(LocalContext.current)
     val task by listTaskViewModel.task.collectAsState()
     val showAlertDialog by listTaskViewModel.showAlertDialog.collectAsState(false)
+    var selectItem by remember { mutableStateOf(TaskEntity()) }
 
 
     Column(
@@ -55,7 +64,7 @@ fun ListTaskScreen(paddingValues: PaddingValues, navController: NavController, l
     ) {
         if (showAlertDialog){
             AlertDialog(onDismissRequest = {}, confirmButton = { Button(onClick = {
-                listTaskViewModel.deleteTask()
+                listTaskViewModel.deleteTask(selectItem)
             }){
                 Text(text = "Sim")
             } }, dismissButton =  {
@@ -68,43 +77,44 @@ fun ListTaskScreen(paddingValues: PaddingValues, navController: NavController, l
         if (task.isNotEmpty()){
 
             LazyColumn {
-                task.forEach {task->
-                    item{
-                        Card(modifier = Modifier.fillMaxWidth().padding(10.dp).clickable {
-                            listTaskViewModel.navigate(Routes.DetailsTask.route , navController)
+                items(task) { taskItem ->
+                    Card(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp)
+                            .clickable {
+                                localDataShared.saveID(Constants.TASK_KEY, taskItem.id)
+                                listTaskViewModel.navigate(Routes.DetailsTask.route, navController)
+                            }
+                    ) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = taskItem.title,
+                                modifier = Modifier.padding(20.dp)
+                            )
 
-                        }) {
-
-
-                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-
-                                Text(text = task.title, modifier = Modifier.padding(start = 20.dp, end = 20.dp, top = 10.dp, bottom = 10.dp))
-                                Box(modifier = Modifier){
-                                    Row {
-                                        IconButton(onClick =
-                                        {
-
-                                            listTaskViewModel.setShowAlertDialog(true)
-
-                                        }
-                                        ) {
-                                            Icon(Icons.Default.Delete, contentDescription = null)
-                                        }
-                                        IconButton(onClick = {
-                                            listTaskViewModel.navigate(Routes.EditTask.route,  navController)
-
-                                        }) {
-                                            Icon(Icons.Default.Edit, contentDescription = null)
-                                        }
-                                    }
-
+                            Row {
+                                IconButton(onClick = {
+                                    selectItem = taskItem
+                                    listTaskViewModel.setShowAlertDialog(true)
+                                }) {
+                                    Icon(Icons.Default.Delete, contentDescription = null)
+                                }
+                                IconButton(onClick = {
+                                    localDataShared.saveID(Constants.TASK_KEY, taskItem.id)
+                                    listTaskViewModel.navigate(Routes.EditTask.route, navController)
+                                }) {
+                                    Icon(Icons.Default.Edit, contentDescription = null)
                                 }
                             }
                         }
                     }
-
                 }
             }
+
 
 
         }else{

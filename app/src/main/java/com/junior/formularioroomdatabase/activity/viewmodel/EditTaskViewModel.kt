@@ -1,13 +1,16 @@
 package com.junior.formularioroomdatabase.activity.viewmodel
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.junior.formularioroomdatabase.base.Constants
 import com.junior.formularioroomdatabase.base.Routes
 import com.junior.formularioroomdatabase.data.SharedPreferences
 import com.junior.formularioroomdatabase.data.TaskDataBase
+import com.junior.formularioroomdatabase.data.TaskEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class EditTaskViewModel(
     private val localData: SharedPreferences,
@@ -15,20 +18,30 @@ class EditTaskViewModel(
     private val localDB:TaskDataBase):
     ViewModel() {
 
-    private var _title = MutableStateFlow(localData.getPreference(Constants.TITLE_KEY))
+    private var _task = MutableStateFlow(TaskEntity())
+    val task:StateFlow<TaskEntity> = _task
+
+    private var _title = MutableStateFlow("")
     val title: StateFlow<String> = _title
 
-    private var _description = MutableStateFlow(localData.getPreference(Constants.DESCRIPTION_KEY))
+    private var _description = MutableStateFlow("")
     val  description : StateFlow<String> = _description
 
     private var _isEditRequest = MutableStateFlow(false)
     val isEditRequest: StateFlow<Boolean> = _isEditRequest
 
-
+    fun loadTask(){
+        viewModelScope.launch {
+            _task.value = localDB.taskDao().getByID(localData.getByIdPreference(Constants.TASK_KEY))
+            setTitle(_task.value.title)
+            setDescription(_task.value.description)
+        }
+    }
 
     fun editTask(){
-        localData.savePreference(Constants.TITLE_KEY, _title.value)
-        localData.savePreference(Constants.DESCRIPTION_KEY, _description.value)
+        viewModelScope.launch {
+            localDB.taskDao().update(TaskEntity(_task.value.id, _title.value, _description.value))
+        }
         navigate(Routes.TaskList.route)
     }
 

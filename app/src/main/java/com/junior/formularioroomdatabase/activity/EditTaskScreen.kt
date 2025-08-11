@@ -21,6 +21,10 @@ import com.junior.formularioroomdatabase.base.Constants
 
 @Composable
 fun EditTaskScreen(paddingValues: PaddingValues, editTaskViewModel: EditTaskViewModel) {
+    LaunchedEffect(editTaskViewModel.task) {
+        editTaskViewModel.loadTask()
+    }
+
 
     val title by editTaskViewModel.title.collectAsState()
     val description by editTaskViewModel.description.collectAsState()

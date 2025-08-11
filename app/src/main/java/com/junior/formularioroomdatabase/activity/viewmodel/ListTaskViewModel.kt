@@ -7,30 +7,31 @@ import com.junior.formularioroomdatabase.base.Constants
 import com.junior.formularioroomdatabase.data.SharedPreferences
 import com.junior.formularioroomdatabase.data.TaskDataBase
 import com.junior.formularioroomdatabase.data.TaskEntity
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class ListTaskViewModel(val localData: SharedPreferences, private val localDB:TaskDataBase): ViewModel() {
+class ListTaskViewModel( private val localDB:TaskDataBase): ViewModel() {
 
 
     private var _task = MutableStateFlow<List<TaskEntity>>(emptyList())
     val task:StateFlow<List<TaskEntity>> = _task
-    private var _title = MutableStateFlow(localData.getPreference(Constants.TITLE_KEY))
-    val title: StateFlow<String> = _title
+
     private var _showAlertDialog = MutableStateFlow(false)
     var showAlertDialog: StateFlow<Boolean> = _showAlertDialog
 
     fun loadTask(){
-        viewModelScope.launch {
+        viewModelScope.launch{
             _task.value = localDB.taskDao().getAll()
         }
     }
 
-    fun deleteTask(){
-        localData.deletePreference(Constants.TITLE_KEY)
-        localData.deletePreference(Constants.DESCRIPTION_KEY)
-        _title.value = ""
+    fun deleteTask(task: TaskEntity){
+        viewModelScope.launch{
+            localDB.taskDao().delete(task)
+            _task.value = localDB.taskDao().getAll()
+        }
         _showAlertDialog.value = false
     }
 

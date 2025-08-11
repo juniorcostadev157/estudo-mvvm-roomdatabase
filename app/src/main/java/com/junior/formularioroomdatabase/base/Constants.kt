@@ -7,5 +7,7 @@ class Constants {
 
         const val TITULO = "Titulo"
         const val DESCRICAO = "Descrição"
+
+        const val TASK_KEY = "task_key"
     }
 }

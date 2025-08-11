@@ -11,11 +11,14 @@ interface TaskDAO {
     suspend fun insertAll(vararg taskEntity: TaskEntity)
 
     @Update
-    fun updateAll(taskEntity: TaskEntity)
+    suspend fun update(taskEntity: TaskEntity)
 
     @Delete
-    fun delete(taskEntity: TaskEntity)
+    suspend fun delete(taskEntity: TaskEntity)
 
     @Query("SELECT * From taskEntity")
    suspend fun getAll():List<TaskEntity>
+
+    @Query("SELECT * From taskEntity where id like(:id)")
+    suspend fun getByID(id:Long):TaskEntity
 }

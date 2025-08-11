@@ -9,20 +9,28 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.junior.formularioroomdatabase.base.Constants
-import com.junior.formularioroomdatabase.data.SharedPreferences
+import com.junior.formularioroomdatabase.activity.viewmodel.DetailsTaskViewModel
+
 
 @Composable
-fun DetailTaskScreen(paddingValues: PaddingValues, localData: SharedPreferences){
+fun DetailTaskScreen(paddingValues: PaddingValues, detailsTaskViewModel: DetailsTaskViewModel){
+
+    LaunchedEffect(detailsTaskViewModel.task) {
+        detailsTaskViewModel.loadTask()
+    }
+
+    val title by detailsTaskViewModel.title.collectAsState()
+    val description by detailsTaskViewModel.description.collectAsState()
+
+
 
     Column(modifier = Modifier.padding(paddingValues).fillMaxSize()){
-        val title by remember { mutableStateOf(localData.getPreference(Constants.TITLE_KEY)) }
-        val description by remember { mutableStateOf(localData.getPreference(Constants.DESCRIPTION_KEY)) }
+
         Column(
             modifier = Modifier.padding(paddingValues).fillMaxSize()
         ) {

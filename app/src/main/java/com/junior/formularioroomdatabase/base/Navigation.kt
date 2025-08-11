@@ -7,31 +7,37 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.junior.formularioroomdatabase.data.SharedPreferences
 import com.junior.formularioroomdatabase.data.TaskDataBase
 
 class Navigation {
     private lateinit var localdb: TaskDataBase
+    private lateinit var navController: NavHostController
 
-    private fun NavGraphBuilder.composableScreen(routes: String){
-        composable(routes){
-            CallScaffold(navController, localdb).CreateScreen(screen = routes)
+    private fun NavGraphBuilder.composableScreen(
+        routes: String,
+        navController: NavHostController,
+        localdb: TaskDataBase,
+        localData: SharedPreferences
+    ) {
+        composable(routes) {
+            CallScaffold(navController, localdb, localData).CreateScreen(screen = routes)
         }
     }
 
-    private lateinit var  navController: NavHostController
-
-
     @Composable
-    fun Create(){
+    fun Create() {
         navController = rememberNavController()
-        localdb = TaskDataBase.getDataBase(LocalContext.current)
+        val context = LocalContext.current
 
-        NavHost(navController = navController, startDestination = Routes.TaskList.route){
+        localdb = TaskDataBase.getDataBase(context)
+        val localData = SharedPreferences(context)
 
-            composableScreen(Routes.TaskList.route)
-            composableScreen(Routes.CreateTask.route)
-            composableScreen(Routes.EditTask.route)
-            composableScreen(Routes.DetailsTask.route)
+        NavHost(navController = navController, startDestination = Routes.TaskList.route) {
+            composableScreen(Routes.TaskList.route, navController, localdb, localData)
+            composableScreen(Routes.CreateTask.route, navController, localdb, localData)
+            composableScreen(Routes.EditTask.route, navController, localdb, localData)
+            composableScreen(Routes.DetailsTask.route, navController, localdb, localData)
         }
     }
 }
