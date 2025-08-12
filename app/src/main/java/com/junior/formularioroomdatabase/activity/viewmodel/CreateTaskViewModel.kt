@@ -6,8 +6,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.junior.formularioroomdatabase.base.Routes
-import com.junior.formularioroomdatabase.data.TaskDataBase
-import com.junior.formularioroomdatabase.data.TaskEntity
+import com.junior.formularioroomdatabase.data.db.TaskDataBase
+import com.junior.formularioroomdatabase.data.entity.TaskEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
@@ -15,7 +15,8 @@ import kotlinx.coroutines.launch
 class CreateTaskViewModel(
 
     private val navController: NavController,
-    private val localDB:TaskDataBase):
+    private val localDB: TaskDataBase
+):
     ViewModel() {
 
     private var _title = MutableStateFlow("")

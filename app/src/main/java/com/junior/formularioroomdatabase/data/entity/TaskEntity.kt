@@ -1,4 +1,4 @@
-package com.junior.formularioroomdatabase.data
+package com.junior.formularioroomdatabase.data.entity
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

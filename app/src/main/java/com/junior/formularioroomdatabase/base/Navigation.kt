@@ -7,8 +7,8 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.junior.formularioroomdatabase.data.SharedPreferences
-import com.junior.formularioroomdatabase.data.TaskDataBase
+import com.junior.formularioroomdatabase.data.prefs.SharedPreferences
+import com.junior.formularioroomdatabase.data.db.TaskDataBase
 
 class Navigation {
     private lateinit var localdb: TaskDataBase

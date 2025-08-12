@@ -1,4 +1,4 @@
-package com.junior.formularioroomdatabase.data
+package com.junior.formularioroomdatabase.data.prefs
 
 import android.content.Context
 import android.content.SharedPreferences

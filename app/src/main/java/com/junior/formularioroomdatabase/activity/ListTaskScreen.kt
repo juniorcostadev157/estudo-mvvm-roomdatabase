@@ -37,8 +37,8 @@ import androidx.navigation.NavController
 import com.junior.formularioroomdatabase.activity.viewmodel.ListTaskViewModel
 import com.junior.formularioroomdatabase.base.Constants
 import com.junior.formularioroomdatabase.base.Routes
-import com.junior.formularioroomdatabase.data.SharedPreferences
-import com.junior.formularioroomdatabase.data.TaskEntity
+import com.junior.formularioroomdatabase.data.prefs.SharedPreferences
+import com.junior.formularioroomdatabase.data.entity.TaskEntity
 
 @SuppressLint("ViewModelConstructorInComposable")
 @Composable

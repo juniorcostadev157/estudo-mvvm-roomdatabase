@@ -3,16 +3,13 @@ package com.junior.formularioroomdatabase.activity.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
-import com.junior.formularioroomdatabase.base.Constants
-import com.junior.formularioroomdatabase.data.SharedPreferences
-import com.junior.formularioroomdatabase.data.TaskDataBase
-import com.junior.formularioroomdatabase.data.TaskEntity
-import kotlinx.coroutines.Dispatchers
+import com.junior.formularioroomdatabase.data.db.TaskDataBase
+import com.junior.formularioroomdatabase.data.entity.TaskEntity
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
-class ListTaskViewModel( private val localDB:TaskDataBase): ViewModel() {
+class ListTaskViewModel( private val localDB: TaskDataBase): ViewModel() {
 
 
     private var _task = MutableStateFlow<List<TaskEntity>>(emptyList())

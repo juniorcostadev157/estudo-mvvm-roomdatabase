@@ -30,10 +30,10 @@ import com.junior.formularioroomdatabase.activity.viewmodel.CreateTaskViewModel
 import com.junior.formularioroomdatabase.activity.viewmodel.DetailsTaskViewModel
 import com.junior.formularioroomdatabase.activity.viewmodel.EditTaskViewModel
 import com.junior.formularioroomdatabase.activity.viewmodel.ListTaskViewModel
-import com.junior.formularioroomdatabase.data.SharedPreferences
-import com.junior.formularioroomdatabase.data.TaskDataBase
+import com.junior.formularioroomdatabase.data.prefs.SharedPreferences
+import com.junior.formularioroomdatabase.data.db.TaskDataBase
 
-class CallScaffold (private val navController: NavController, private val localDB:TaskDataBase, localData:SharedPreferences){
+class CallScaffold (private val navController: NavController, private val localDB: TaskDataBase, localData: SharedPreferences){
 
 
 

@@ -1,9 +1,11 @@
-package com.junior.formularioroomdatabase.data
+package com.junior.formularioroomdatabase.data.db
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import com.junior.formularioroomdatabase.data.entity.TaskEntity
+import com.junior.formularioroomdatabase.data.local.TaskDAO
 
 @Database(entities = [TaskEntity::class], version = 1)
 
@@ -16,7 +18,7 @@ abstract class TaskDataBase :RoomDatabase(){
         @Volatile
         private var INSTANCE: TaskDataBase? = null
 
-        fun getDataBase(context: Context):TaskDataBase{
+        fun getDataBase(context: Context): TaskDataBase {
             val  tempInstance = INSTANCE
             if (tempInstance != null){
                 return tempInstance
